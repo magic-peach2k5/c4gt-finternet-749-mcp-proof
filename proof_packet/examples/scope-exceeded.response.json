@@ -1,0 +1,21 @@
+{
+  "note": "Synthetic proposal proof. Shows stable scope failure shape for agents.",
+  "requestId": "req_preflight_002",
+  "toolName": "check_transfer_eligibility",
+  "resultCode": "SCOPE_EXCEEDED",
+  "eligible": false,
+  "preflightId": "pf_124",
+  "errors": [
+    {
+      "code": "SCOPE_EXCEEDED",
+      "message": "Requested transfer exceeds delegated amount limit.",
+      "detail": {
+        "delegationId": "del_7f5c",
+        "requestedAmount": "1500.00",
+        "remainingAmount": "850.00",
+        "safeToRetry": false
+      }
+    }
+  ],
+  "audit": {"logged": true, "actingAccountAddress": "agent@finternet", "delegationId": "del_7f5c"}
+}

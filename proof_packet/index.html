@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Finternet #749 MCP workflow proof</title>
+  <style>
+    :root {
+      --bg: #f7f8fa;
+      --panel: #ffffff;
+      --ink: #17202a;
+      --muted: #5f6b7a;
+      --line: #d9dee7;
+      --ok: #0f7a4f;
+      --warn: #9a5b00;
+      --bad: #b42318;
+      --blue: #1f5eff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+    header {
+      padding: 24px 28px 16px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel);
+    }
+    h1 { margin: 0 0 6px; font-size: 24px; line-height: 1.2; }
+    p { margin: 0; color: var(--muted); }
+    main { padding: 20px 28px 28px; max-width: 1280px; margin: 0 auto; }
+    .notice {
+      background: #fff7e6;
+      border: 1px solid #ffd58a;
+      color: #5f3b00;
+      padding: 10px 12px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+    .flows {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    button {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      border-radius: 6px;
+      padding: 9px 12px;
+      cursor: pointer;
+      font: inherit;
+    }
+    button.active {
+      border-color: var(--blue);
+      color: var(--blue);
+      box-shadow: inset 0 0 0 1px var(--blue);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      min-height: 420px;
+      display: flex;
+      flex-direction: column;
+    }
+    .panel h2 {
+      margin: 0;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      font-size: 15px;
+    }
+    pre {
+      margin: 0;
+      padding: 14px;
+      overflow: auto;
+      white-space: pre-wrap;
+      font-size: 13px;
+      line-height: 1.45;
+      flex: 1;
+    }
+    .safety {
+      margin-top: 16px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .safety h2 { margin: 0 0 10px; font-size: 16px; }
+    .checks {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .check {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 9px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .check.ok { border-color: #9bd4bb; color: var(--ok); }
+    .check.warn { border-color: #f0c36a; color: var(--warn); }
+    .check.bad { border-color: #f2aaa4; color: var(--bad); }
+    @media (max-width: 900px) {
+      .grid, .checks { grid-template-columns: 1fr; }
+      main, header { padding-left: 16px; padding-right: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Finternet #749 MCP workflow proof</h1>
+    <p>Proposal-facing simulator for delegation-scoped MCP tools. Not the private UNITS MCP server.</p>
+  </header>
+  <main>
+    <div class="notice">Synthetic data based on public specs and issue #749. No private key, raw credential claim, or real transfer appears here.</div>
+    <div class="flows" id="flows"></div>
+    <section class="grid">
+      <article class="panel"><h2>Agent intent</h2><pre id="intent"></pre></article>
+      <article class="panel"><h2>MCP tool call</h2><pre id="tool"></pre></article>
+      <article class="panel"><h2>Structured response</h2><pre id="response"></pre></article>
+    </section>
+    <section class="safety">
+      <h2>Safety checks</h2>
+      <div class="checks" id="checks"></div>
+    </section>
+  </main>
+  <script>
+    const flows = [
+      {
+        name: "Delegation scope",
+        intent: "Can I transfer INRT for merchant@finternet under my current delegation?",
+        tool: {
+          toolName: "get_delegation_scope",
+          input: {
+            requestId: "req_scope_001",
+            actingAccountAddress: "agent@finternet",
+            delegatorAccountAddress: "merchant@finternet",
+            delegateeAccountAddress: "agent@finternet",
+            delegationCredentialChain: "opaque-reference",
+            operation: "transfer",
+            tokenClass: "INRT"
+          }
+        },
+        response: {
+          resultCode: "OK",
+          delegationId: "del_7f5c",
+          credentialChainRef: "cred_chain_aa12",
+          issuer: "did:finternet:merchant-auth",
+          issuedAt: "2026-04-25T10:00:00Z",
+          status: "active",
+          revocationStatus: "not_revoked",
+          allowedTokenClasses: ["INRT"],
+          remainingAmount: "850.00",
+          audit: { logged: true, actingAccountAddress: "agent@finternet", delegationId: "del_7f5c" }
+        },
+        checks: ["scope validated", "server enforces", "audit logged"]
+      },
+      {
+        name: "Valid preflight",
+        intent: "Check whether a 500.00 INRT transfer is allowed before committing it.",
+        tool: {
+          toolName: "check_transfer_eligibility",
+          input: {
+            requestId: "req_preflight_001",
+            actingAccountAddress: "agent@finternet",
+            delegationCredentialChain: "opaque-reference",
+            fromAccount: "merchant@finternet",
+            toAccount: "supplier@finternet",
+            tokenClass: "INRT",
+            amount: "500.00",
+            purpose: "invoice-payment"
+          }
+        },
+        response: {
+          resultCode: "OK",
+          eligible: true,
+          preflightId: "pf_123",
+          scopeCheck: { passed: true, remainingAmountAfterTransfer: "350.00" },
+          credentialChecks: [{ credentialType: "kycVerification", passed: true, rawClaimValuesExposed: false }]
+        },
+        checks: ["side-effect free", "preflight id", "no raw claims"]
+      },
+      {
+        name: "Scope exceeded",
+        intent: "Try a 1500.00 INRT transfer. The agent should receive a recoverable policy explanation.",
+        tool: {
+          toolName: "check_transfer_eligibility",
+          input: {
+            requestId: "req_preflight_002",
+            actingAccountAddress: "agent@finternet",
+            delegationCredentialChain: "opaque-reference",
+            fromAccount: "merchant@finternet",
+            toAccount: "supplier@finternet",
+            tokenClass: "INRT",
+            amount: "1500.00"
+          }
+        },
+        response: {
+          resultCode: "SCOPE_EXCEEDED",
+          eligible: false,
+          errors: [{ code: "SCOPE_EXCEEDED", message: "Requested transfer exceeds delegated amount limit.", detail: { requestedAmount: "1500.00", remainingAmount: "850.00", safeToRetry: false } }]
+        },
+        checks: ["structured error", "no generic failure", "no commit"]
+      },
+      {
+        name: "Credential VP",
+        intent: "Satisfy a transfer policy requirement without revealing credential claims to the agent.",
+        tool: {
+          toolName: "present_credential_vp",
+          input: {
+            requestId: "req_vp_001",
+            actingAccountAddress: "agent@finternet",
+            delegationCredentialChain: "opaque-reference",
+            accountAddress: "merchant@finternet",
+            policyRequirementId: "kyc_required_for_transfer",
+            preflightId: "pf_125"
+          }
+        },
+        response: {
+          resultCode: "OK",
+          presentationId: "vp_123",
+          status: "submitted",
+          credentialType: "kycVerification",
+          verificationResult: "passed",
+          rawClaimValuesExposed: false
+        },
+        checks: ["server-side VP", "no raw claims", "policy linked"]
+      },
+      {
+        name: "Transfer commit",
+        intent: "Commit transfer only after valid preflight and return transaction result.",
+        tool: {
+          toolName: "initiate_transfer",
+          input: {
+            requestId: "req_transfer_001",
+            actingAccountAddress: "agent@finternet",
+            delegationCredentialChain: "opaque-reference",
+            preflightId: "pf_123",
+            fromAccount: "merchant@finternet",
+            toAccount: "supplier@finternet",
+            tokenClass: "INRT",
+            amount: "500.00"
+          }
+        },
+        response: {
+          resultCode: "ACCEPTED",
+          transaction: { transactionId: "tx_123", status: "accepted", operation: "transfer" },
+          audit: { logged: true, actingAccountAddress: "agent@finternet", delegationId: "del_7f5c" }
+        },
+        checks: ["preflight required", "commit accepted", "audit logged"]
+      },
+      {
+        name: "Lifecycle subscribe",
+        intent: "Subscribe to scoped lifecycle events after transfer workflow.",
+        tool: {
+          toolName: "subscribe_lifecycle_events",
+          input: {
+            requestId: "req_event_001",
+            actingAccountAddress: "agent@finternet",
+            delegationCredentialChain: "opaque-reference",
+            delegatorAccountAddress: "merchant@finternet",
+            tokenClass: "INRT",
+            operations: ["transfer"],
+            eventTypes: ["transfer_committed", "credential_expired"],
+            replayLimit: 10,
+            expiresInSeconds: 900
+          }
+        },
+        response: {
+          resultCode: "OK",
+          subscriptionId: "sub_123",
+          mode: "scoped_poll",
+          events: [{ eventType: "transfer_committed", visibleUnderDelegation: true }],
+          audit: { logged: true, actingAccountAddress: "agent@finternet", delegationId: "del_7f5c" }
+        },
+        checks: ["scoped event", "bounded replay", "expiry bound"]
+      }
+    ];
+    const safety = [
+      ["ok", "No private key"],
+      ["ok", "No raw credential claim"],
+      ["ok", "Preflight before commit"],
+      ["ok", "Scoped events only"],
+      ["warn", "Synthetic proof only"]
+    ];
+    const flowRoot = document.getElementById("flows");
+    const intent = document.getElementById("intent");
+    const tool = document.getElementById("tool");
+    const response = document.getElementById("response");
+    const checks = document.getElementById("checks");
+    function show(index) {
+      [...flowRoot.children].forEach((button, i) => button.classList.toggle("active", i === index));
+      const flow = flows[index];
+      intent.textContent = flow.intent;
+      tool.textContent = JSON.stringify(flow.tool, null, 2);
+      response.textContent = JSON.stringify(flow.response, null, 2);
+      checks.innerHTML = "";
+      safety.concat(flow.checks.map(label => ["ok", label])).forEach(([kind, label]) => {
+        const item = document.createElement("div");
+        item.className = "check " + kind;
+        item.textContent = label;
+        checks.appendChild(item);
+      });
+    }
+    flows.forEach((flow, index) => {
+      const button = document.createElement("button");
+      button.textContent = flow.name;
+      button.onclick = () => show(index);
+      flowRoot.appendChild(button);
+    });
+    show(0);
+  </script>
+</body>
+</html>

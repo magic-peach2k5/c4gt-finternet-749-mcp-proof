@@ -1,0 +1,9 @@
+{
+  "note": "Synthetic proposal proof. Transfer commit requires prior preflight.",
+  "requestId": "req_transfer_001",
+  "toolName": "initiate_transfer",
+  "resultCode": "ACCEPTED",
+  "preflight": {"preflightId": "pf_123", "eligible": true, "checkedAt": "2026-05-03T12:05:00Z"},
+  "transaction": {"transactionId": "tx_123", "status": "accepted", "operation": "transfer", "tokenClass": "INRT", "amount": "500.00"},
+  "audit": {"logged": true, "actingAccountAddress": "agent@finternet", "delegationId": "del_7f5c"}
+}

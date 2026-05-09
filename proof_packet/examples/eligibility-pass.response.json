@@ -1,0 +1,13 @@
+{
+  "note": "Synthetic proposal proof. No real UNITS transfer is executed.",
+  "requestId": "req_preflight_001",
+  "toolName": "check_transfer_eligibility",
+  "resultCode": "OK",
+  "eligible": true,
+  "preflightId": "pf_123",
+  "scopeCheck": {"passed": true, "delegationId": "del_7f5c", "remainingAmountAfterTransfer": "350.00"},
+  "dependencyPointerChecks": [{"name": "tokenClassStatus", "passed": true, "detail": "INRT active"}],
+  "credentialChecks": [{"credentialType": "kycVerification", "passed": true, "rawClaimValuesExposed": false}],
+  "errors": [],
+  "audit": {"logged": true, "actingAccountAddress": "agent@finternet", "delegationId": "del_7f5c"}
+}

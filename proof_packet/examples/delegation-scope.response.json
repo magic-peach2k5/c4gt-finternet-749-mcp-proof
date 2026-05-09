@@ -1,0 +1,21 @@
+{
+  "note": "Synthetic proposal proof based on issue #749 and public Finternet specs.",
+  "requestId": "req_scope_001",
+  "toolName": "get_delegation_scope",
+  "resultCode": "OK",
+  "delegation": {
+    "delegationId": "del_7f5c",
+    "credentialChainRef": "cred_chain_aa12",
+    "issuer": "did:finternet:merchant-auth",
+    "issuedAt": "2026-04-25T10:00:00Z",
+    "status": "active",
+    "revocationStatus": "not_revoked",
+    "delegatorAccountAddress": "merchant@finternet",
+    "delegateeAccountAddress": "agent@finternet",
+    "allowedTokenClasses": ["INRT"],
+    "allowedOperations": ["transfer"],
+    "constraints": [{"operation": "transfer", "tokenClass": "INRT", "remainingAmount": "850.00", "remainingCount": 7}],
+    "expiresAt": "2026-06-01T00:00:00Z"
+  },
+  "audit": {"logged": true, "actingAccountAddress": "agent@finternet", "delegationId": "del_7f5c"}
+}

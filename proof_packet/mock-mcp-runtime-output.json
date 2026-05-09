@@ -1,0 +1,75 @@
+{
+  "proofType": "synthetic local MCP-style harness",
+  "issue": "Finternet #749",
+  "privateMcpServerClaimed": false,
+  "schemaPath": "tool-schemas/check_transfer_eligibility.schema.json",
+  "cases": [
+    {
+      "name": "valid eligibility preflight",
+      "input": {
+        "requestId": "req_preflight_001",
+        "actingAccountAddress": "did:finternet:account:agent",
+        "fromAccount": "did:finternet:account:treasury",
+        "toAccount": "did:finternet:account:merchant",
+        "tokenClass": "INR_UNIT",
+        "amount": "75",
+        "delegationCredentialChain": "delegation_chain_ref_demo",
+        "delegationScope": {
+          "maxAmount": "100",
+          "allowedTokenIds": [
+            "INR_UNIT"
+          ]
+        }
+      },
+      "output": {
+        "ok": true,
+        "result": {
+          "eligible": true,
+          "reason": "Delegation scope allows this side-effect-free preflight.",
+          "requiredNextStep": "initiate_transfer may be called only with matching preflightId.",
+          "preflightId": "preflight_demo_001"
+        },
+        "audit": {
+          "tool": "check_transfer_eligibility",
+          "sideEffectFree": true,
+          "privateKeysExposed": false,
+          "rawCredentialClaimsExposed": false
+        }
+      }
+    },
+    {
+      "name": "scope exceeded preflight",
+      "input": {
+        "requestId": "req_preflight_002",
+        "actingAccountAddress": "did:finternet:account:agent",
+        "fromAccount": "did:finternet:account:treasury",
+        "toAccount": "did:finternet:account:merchant",
+        "tokenClass": "INR_UNIT",
+        "amount": "150",
+        "delegationCredentialChain": "delegation_chain_ref_demo",
+        "delegationScope": {
+          "maxAmount": "100",
+          "allowedTokenIds": [
+            "INR_UNIT"
+          ]
+        }
+      },
+      "output": {
+        "ok": false,
+        "error": {
+          "code": "SCOPE_EXCEEDED",
+          "message": "Requested transfer exceeds delegated amount.",
+          "requestedAmount": "150",
+          "maxDelegatedAmount": "100",
+          "recoverable": true
+        },
+        "audit": {
+          "tool": "check_transfer_eligibility",
+          "sideEffectFree": true,
+          "privateKeysExposed": false,
+          "rawCredentialClaimsExposed": false
+        }
+      }
+    }
+  ]
+}

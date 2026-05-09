@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://finternetlab.io/mcp/tools/initiate_transfer/output.schema.json",
+  "title": "initiate_transfer output",
+  "type": "object",
+  "required": ["resultCode"],
+  "properties": {
+    "resultCode": { "type": "string", "enum": ["ACCEPTED", "REJECTED", "SCOPE_EXCEEDED", "POLICY_FAILED"] },
+    "transaction": { "type": "object" },
+    "audit": { "type": "object" },
+    "errors": { "type": "array", "items": { "$ref": "#/$defs/error" } }
+  },
+  "$defs": {
+    "error": {
+      "type": "object",
+      "required": ["code", "message", "detail"],
+      "properties": {
+        "code": { "type": "string" },
+        "message": { "type": "string" },
+        "detail": { "type": "object" }
+      }
+    }
+  }
+}

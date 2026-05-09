@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/finternet/mcp/get_account_summary.schema.json",
+  "title": "get_account_summary",
+  "type": "object",
+  "required": ["requestId", "actingAccountAddress", "accountAddress", "delegationCredentialChain"],
+  "additionalProperties": false,
+  "properties": {
+    "requestId": {"type": "string", "minLength": 1},
+    "actingAccountAddress": {"type": "string", "minLength": 1},
+    "accountAddress": {"type": "string", "minLength": 1},
+    "delegationCredentialChain": {"type": "string", "minLength": 1},
+    "includeDelegations": {"type": "boolean", "default": true},
+    "includeCredentialSummary": {"type": "boolean", "default": true},
+    "tokenClasses": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    }
+  }
+}

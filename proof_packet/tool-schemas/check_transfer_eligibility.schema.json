@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/finternet/mcp/check_transfer_eligibility.schema.json",
+  "title": "check_transfer_eligibility",
+  "type": "object",
+  "required": ["requestId", "actingAccountAddress", "delegationCredentialChain", "fromAccount", "toAccount", "tokenClass", "amount"],
+  "additionalProperties": false,
+  "properties": {
+    "requestId": {"type": "string", "minLength": 1},
+    "actingAccountAddress": {"type": "string", "minLength": 1},
+    "delegationCredentialChain": {"type": "string", "minLength": 1},
+    "fromAccount": {"type": "string", "minLength": 1},
+    "toAccount": {"type": "string", "minLength": 1},
+    "tokenClass": {"type": "string", "minLength": 1},
+    "amount": {"type": "string", "pattern": "^[0-9]+(\\.[0-9]+)?$"},
+    "purpose": {"type": "string"}
+  }
+}

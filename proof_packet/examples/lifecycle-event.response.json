@@ -1,0 +1,15 @@
+{
+  "note": "Synthetic proposal proof. Event is scoped to delegated account and token class.",
+  "requestId": "req_events_001",
+  "toolName": "subscribe_lifecycle_events",
+  "resultCode": "OK",
+  "subscriptionId": "sub_123",
+  "event": {
+    "eventType": "transfer_committed",
+    "accountAddress": "merchant@finternet",
+    "tokenClass": "INRT",
+    "transactionId": "tx_123",
+    "visibleUnderDelegation": true
+  },
+  "audit": {"logged": true, "actingAccountAddress": "agent@finternet", "delegationId": "del_7f5c"}
+}

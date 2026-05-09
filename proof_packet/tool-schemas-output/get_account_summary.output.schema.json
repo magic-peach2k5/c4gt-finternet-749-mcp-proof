@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://finternetlab.io/mcp/tools/get_account_summary/output.schema.json",
+  "title": "get_account_summary output",
+  "type": "object",
+  "required": ["resultCode", "account", "audit"],
+  "properties": {
+    "resultCode": { "type": "string", "enum": ["OK", "SCOPE_EXCEEDED"] },
+    "account": { "type": "object" },
+    "audit": { "type": "object" },
+    "errors": { "type": "array", "items": { "$ref": "#/$defs/error" } }
+  },
+  "$defs": {
+    "error": {
+      "type": "object",
+      "required": ["code", "message", "detail"],
+      "properties": {
+        "code": { "type": "string" },
+        "message": { "type": "string" },
+        "detail": { "type": "object" }
+      }
+    }
+  }
+}

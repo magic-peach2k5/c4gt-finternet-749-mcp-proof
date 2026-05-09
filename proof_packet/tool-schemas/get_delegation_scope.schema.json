@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/finternet/mcp/get_delegation_scope.schema.json",
+  "title": "get_delegation_scope",
+  "type": "object",
+  "required": ["requestId", "actingAccountAddress", "delegatorAccountAddress", "delegateeAccountAddress", "delegationCredentialChain", "operation"],
+  "additionalProperties": false,
+  "properties": {
+    "requestId": {"type": "string", "minLength": 1},
+    "actingAccountAddress": {"type": "string", "minLength": 1},
+    "delegatorAccountAddress": {"type": "string", "minLength": 1},
+    "delegateeAccountAddress": {"type": "string", "minLength": 1},
+    "delegationCredentialChain": {"type": "string", "minLength": 1},
+    "operation": {"type": "string", "minLength": 1},
+    "tokenClass": {"type": "string", "minLength": 1}
+  }
+}

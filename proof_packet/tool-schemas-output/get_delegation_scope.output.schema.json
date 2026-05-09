@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://finternetlab.io/mcp/tools/get_delegation_scope/output.schema.json",
+  "title": "get_delegation_scope output",
+  "type": "object",
+  "required": ["resultCode", "delegation", "audit"],
+  "properties": {
+    "resultCode": { "type": "string", "enum": ["OK", "SCOPE_EXCEEDED", "DELEGATION_EXPIRED", "DELEGATION_REVOKED", "INVALID_DELEGATION_CHAIN"] },
+    "delegation": {
+      "type": "object",
+      "required": ["delegationId", "credentialChainRef", "issuer", "issuedAt", "expiresAt", "revocationStatus"],
+      "properties": {
+        "delegationId": { "type": "string" },
+        "credentialChainRef": { "type": "string" },
+        "issuer": { "type": "string" },
+        "issuedAt": { "type": "string", "format": "date-time" },
+        "expiresAt": { "type": "string", "format": "date-time" },
+        "revocationStatus": { "type": "string" }
+      }
+    },
+    "audit": {
+      "type": "object",
+      "required": ["logged", "actingAccountAddress", "delegationId"],
+      "properties": {
+        "logged": { "type": "boolean" },
+        "actingAccountAddress": { "type": "string" },
+        "delegationId": { "type": "string" }
+      }
+    },
+    "errors": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/error" }
+    }
+  },
+  "$defs": {
+    "error": {
+      "type": "object",
+      "required": ["code", "message", "detail"],
+      "properties": {
+        "code": { "type": "string" },
+        "message": { "type": "string" },
+        "detail": { "type": "object" }
+      }
+    }
+  }
+}

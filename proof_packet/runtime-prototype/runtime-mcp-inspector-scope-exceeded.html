@@ -1,0 +1,31 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+  :root{color-scheme:light;--bg:#f6f7fb;--panel:#fff;--ink:#111827;--muted:#5b6472;--line:#dbe2ec;--blue:#2563eb;--green:#0f7a4f;--amber:#9a6700;--red:#b42318}
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  .shot{width:1440px;height:900px;padding:34px;background:linear-gradient(180deg,#f8fafc,#eef2f7)}
+  .top{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:22px}
+  h1{font-size:32px;line-height:1.12;margin:0 0 6px;font-weight:780;letter-spacing:0}.sub{font-size:17px;color:var(--muted);max-width:980px}
+  .pill{display:inline-flex;align-items:center;border-radius:999px;padding:8px 12px;font-size:13px;font-weight:750;border:1px solid #bfdbfe;background:#eff6ff;color:#1d4ed8;white-space:nowrap}
+  .grid{display:grid;gap:16px}.cols2{grid-template-columns:1fr 1fr}.cols3{grid-template-columns:repeat(3,1fr)}.cols4{grid-template-columns:repeat(4,1fr)}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;box-shadow:0 16px 45px rgba(15,23,42,.08)}
+  .panel h2,.panel h3{margin:0 0 12px}.muted{color:var(--muted)}.small{font-size:13px}.metric{font-size:30px;font-weight:800;margin-top:4px}.label{font-size:12px;text-transform:uppercase;font-weight:800;color:#64748b}
+  table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}th,td{padding:11px 12px;border-bottom:1px solid #e5eaf2;text-align:left;vertical-align:top}th{background:#0f172a;color:#fff;font-size:12px;text-transform:uppercase}tr:last-child td{border-bottom:0}
+  .ok{color:var(--green);font-weight:800}.warn{color:var(--amber);font-weight:800}.bad{color:var(--red);font-weight:800}
+  .notice{background:#fff7e6;border:1px solid #f5c66d;color:#6b4300;border-radius:10px;padding:12px 14px;font-weight:650}
+  pre{margin:0;background:#0f172a;color:#e5eefb;border-radius:10px;padding:16px;font:14px/1.45 SFMono-Regular,Menlo,Consolas,monospace;white-space:pre-wrap}
+</style></head><body><main class="shot"><div class="top"><div><h1>Finternet #749 Runtime Panel - MCP Scope Exceeded</h1><div class="sub">Inspector-style view from the harness: request, schema/delegation checks, structured safe denial.</div></div><div class="pill">RUNTIME PROOF</div></div><div class="grid cols3">
+        <section class="panel"><h2>Agent Intent</h2><pre>intent: commit transfer
+from: agent_0x7a...42
+to: merchant_0x9f...88
+amount: 250 INRT
+requested_action: transfer:commit</pre></section>
+        <section class="panel"><h2>MCP Gate</h2><table><thead><tr><th>Check</th><th>Result</th></tr></thead><tbody><tr><td>JSON schema</td><td class="ok">valid</td></tr><tr><td>delegation exists</td><td class="ok">valid</td></tr><tr><td>allowed action</td><td class="bad">transfer:commit denied</td></tr><tr><td>secret exposure</td><td class="ok">none</td></tr></tbody></table></section>
+        <section class="panel"><h2>Structured Response</h2><pre>{
+  "ok": false,
+  "error": {
+    "code": "SCOPE_EXCEEDED",
+    "message": "Agent lacks transfer:commit delegation"
+  },
+  "privateKeysExposed": false,
+  "rawCredentialClaimsExposed": false
+}</pre></section>
+      </div></main></body></html>

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://finternetlab.io/mcp/tools/subscribe_lifecycle_events/output.schema.json",
+  "title": "subscribe_lifecycle_events output",
+  "type": "object",
+  "required": ["resultCode", "subscriptionId"],
+  "properties": {
+    "resultCode": { "type": "string", "enum": ["OK", "SCOPE_EXCEEDED"] },
+    "subscriptionId": { "type": "string" },
+    "mode": { "type": "string" },
+    "events": { "type": "array", "items": { "type": "object" } },
+    "audit": { "type": "object" },
+    "errors": { "type": "array", "items": { "$ref": "#/$defs/error" } }
+  },
+  "$defs": {
+    "error": {
+      "type": "object",
+      "required": ["code", "message", "detail"],
+      "properties": {
+        "code": { "type": "string" },
+        "message": { "type": "string" },
+        "detail": { "type": "object" }
+      }
+    }
+  }
+}

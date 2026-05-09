@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/finternet/mcp/subscribe_lifecycle_events.schema.json",
+  "title": "subscribe_lifecycle_events",
+  "type": "object",
+  "required": ["requestId", "actingAccountAddress", "delegationCredentialChain", "accountAddress", "eventTypes"],
+  "additionalProperties": false,
+  "properties": {
+    "requestId": {"type": "string", "minLength": 1},
+    "actingAccountAddress": {"type": "string", "minLength": 1},
+    "delegationCredentialChain": {"type": "string", "minLength": 1},
+    "accountAddress": {"type": "string", "minLength": 1},
+    "eventTypes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": ["transfer_committed", "credential_expired", "dependency_pointer_changed", "delegation_revoked", "transaction_failed"]
+      }
+    },
+    "tokenClasses": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    }
+  }
+}
